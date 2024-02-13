@@ -1,0 +1,64 @@
+Challange 2:
+
+We need to write code that will query the meta data of an instance within AWS or Azure or GCP and provide a json formatted output. The choice of language and implementation is up to you.
+
+
+# Define the base URL for accessing instance metadata
+base_url = "http://169.254.169.254/latest/userdata/"
+
+# Define a function to retrieve all metadata
+def get_all_metadata():
+    response = requests.get(base_url)
+    response.raise_for_status()  # Raise an error for non-200 status code
+    metadata = response.json()
+    return metadata
+
+# Define a function to retrieve a specific data key
+def get_specific_key(key):
+    url = f"{base_url}{key}"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.text
+
+# Example usage
+all_metadata = get_all_metadata()
+print(f"All metadata: \n{json.dumps(all_metadata, indent=4)}")
+
+specific_key = "vmSize"
+value = get_specific_key(specific_key)
+print(f"Value of {specific_key}: {value}")
+
+Challange 3
+
+We have a nested object. We would like a function where you pass in the object and a key and get back the value.
+The choice of language and implementation is up to you.
+Example Inputs
+object = {“a”:{“b”:{“c”:”d”}}}
+key = a/b/c
+object = {“x”:{“y”:{“z”:”a”}}}
+key = x/y/z
+
+Ans:
+
+def get_value_by_key(obj, key):
+    keys = key.split("/")
+    current_obj = obj
+
+    try:
+        for k in keys:
+            current_obj = current_obj[k]
+        return current_obj
+    except KeyError:
+        return None
+
+# Example usage:
+object1 = {"a": {"b": {"c": "d"}}}
+key1 = "a/b/c"
+result1 = get_value_by_key(object1, key1)
+print(f"Result 1: {result1}")
+
+object2 = {"x": {"y": {"z": "a"}}}
+key2 = "x/y/z"
+result2 = get_value_by_key(object2, key2)
+print(f"Result 2: {result2}")
+
